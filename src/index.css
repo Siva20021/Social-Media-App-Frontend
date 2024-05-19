@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.button {
+  @apply bg-[#f91e5a] rounded-md px-10 py-2 text-white hover:bg-white hover:text-[#f91e5a] hover:border-[#f91e5a] hover:border ;
+}
+.button2 {
+  @apply bg-white rounded-md px-10 py-2 text-[#f91e5a] hover:bg-[#f91e5a] hover:text-white border-[#f91e5a] border ;
+}
