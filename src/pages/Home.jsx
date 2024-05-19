@@ -1,26 +1,69 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import Post from '../components/Post'
-const Home = () => {
+import { FaUserFriends } from "react-icons/fa";
+import { GrGallery } from "react-icons/gr";
+import axios from 'axios';
+const Home =() => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const [posts,setPosts]=useState([]);
+  const getPosts=async()=>{
+    try{
+      const response = await axios.get('http://localhost:8800/api/posts');
+      setPosts(response.data);
+    }catch(err){
+      console.log(err);
+    }
+  }
+  useEffect(()=>{
+    getPosts();
+  },[posts]);
   return (
     <div>
       <section className="px-5 py-10  ">
-        <div className="container grid grid-cols-12 mx-auto gap-y-6 md:gap-10 ">
+        <div className="container grid grid-cols-12 gap-y-6 md:gap-10 ">
           <div className='col-span-12 space-y-5  md:col-span-3 lg:sticky top-10 self-start flex justify-center items-center '>
-          <div className="flex flex-col bg-white shadow-md px-10 py-5 rounded-lg min-w-[500px] md:min-w-[300px]">
-            <h1 className='text-[24px] font-bold'>Welcome User</h1>
-            <div className='flex flex-col space-y-5'>
-            <h2 className='text-[20px] font-medium'>Start your journey</h2>
-            <button className='button'>Signup</button>
-            <button className='button2'>Login</button>
-            </div>
-          </div>
+            {
+              user ?
+                (
+                  <div className="flex flex-col bg-white shadow-md px-10 py-5 rounded-lg w-full max-w-[500px] md:min-w-[300px] space-y-5">
+
+                    <h1 className='text-[24px] font-medium'>Hello <span className='text-[#f91e5a] font-bold'>{user.username} 👋🏻</span> </h1>
+                    <hr/>
+                    <div className='flex flex-col space-y-5'>
+                      <h2 className='flex space-x-3'>
+                        <GrGallery className='w-6 h-6' />
+                        <span className='font-medium'>Posts:</span>
+                        <span className='font-bold ml-3'>{user.posts.length}</span>
+                      </h2>
+                      <h2 className='flex space-x-3'>
+                        <FaUserFriends className='w-6 h-6' />
+                        <span className='font-medium'>friends:</span>
+                        <span className='font-bold ml-3'>{user.friends.length}</span>
+                      </h2>
+                    </div>
+                  </div>
+                )
+                :
+                (
+                  <div className="flex flex-col bg-white shadow-md px-10 py-5 rounded-lg w-full max-w-[500px] md:min-w-[300px]">
+
+                    <h1 className='text-[24px] font-bold'>Welcome User</h1>
+                    <div className='flex flex-col space-y-5'>
+                      <h2 className='text-[20px] font-medium'>Start your journey</h2>
+                      <button className='button'>Signup</button>
+                      <button className='button2'>Login</button>
+                    </div>
+                  </div>
+                )}
+
           </div>
           <div className="relative flex col-span-12 bg-center bg-no-repeat bg-cover  xl:col-span-6 lg:col-span-5 md:col-span-9 min-h-96">
             <div className='flex flex-col space-y-10 items-center w-full'>
-              <Post/>
-              <Post/>
+              {posts?.map((post, index) => {
+                return <Post key={index} title={post.title} content={post.content} image={post.image} userId={post.userId} createdAt={post.createdAt} likes={post.Likes} comments={post.comments} id={post.id}/>
+              })}
             </div>
-            
+
           </div>
           <div className="hidden py-2 xl:col-span-3 lg:col-span-4 md:hidden  lg:block sticky top-10 self-start shadow-md px-10 bg-white">
             <div className="mb-8 space-x-5 border-b-2 border-opacity-10  ">
