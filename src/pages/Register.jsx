@@ -16,13 +16,12 @@ const signup = async (e) => {
         if (formData.email == '' || formData.username == '' || formData.password == '') {
             setError('Please Fill all the Fields');
         }
-        const response = await axios.post('http://localhost:8800/api/auth/register', {
+        const response = await axios.post('api/auth/register', {
             ...formData,
         });
         if(response.status===201){
             toast.success("User has been created.");
-            localStorage.setItem("user", JSON.stringify(response.data));
-            navigate("/");
+            navigate("/login");
         }
     } catch (err) {
         toast.error(err.message);

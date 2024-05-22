@@ -4,23 +4,33 @@ import { FaComment } from "react-icons/fa";
 import { BiLike } from "react-icons/bi";
 import ToMessage from './ToMessage';
 import axios from 'axios';
-const Post = ({title,image,content,id,createdAt,likes,comments}) => {
+import toast, { Toaster } from 'react-hot-toast';
+const Post = ({title,image,content,id,createdAt,likes,comments,username}) => {
 	const user=JSON.parse(localStorage.getItem('user'));
 	const [open,setOpen]=useState(false);
 	const [newCommentMessage, setNewCommentMessage] = useState("");
 	const postLike=async(id)=>{
 		try{
-			const response=await axios.put(`http://localhost:8800/api/posts/like/${id}`,{
+			const response=await axios.put(`api/posts/like/${id}`,{
 				userId:user.id
 			});
-			console.log(response.data);
+            if(response.status===200){
+                toast.error("Post has disliked");
+            }
+            else if(response.status===201){
+                toast.success("Post has liked");
+            }
+            else{
+                toast.loading('Error');
+            }
+            
 		}catch(err){
 			console.log(err);
 		}
 	}
 	const postComment=async(message)=>{
 		try{
-			const response=await axios.post(`http://localhost:8800/api/posts/comment/${id}`,{
+			const response=await axios.post(`api/posts/comment/${id}`,{
 				userId:user.id,
 				name:user.username,
 				content:message
@@ -33,15 +43,19 @@ const Post = ({title,image,content,id,createdAt,likes,comments}) => {
 	return (
     
     <div className="flex flex-col w-full md:w-[400px] lg:w-[450px] p-6 space-y-6 overflow-hidden rounded-lg shadow-md bg-white ">
-	<div className="flex space-x-4">
+    <Toaster
+        
+        />
+    <div className="flex space-x-4">
 		<img alt="" src="https://source.unsplash.com/100x100/?portrait" className="object-cover w-12 h-12 rounded-full shadow bg-gray-500" />
 		<div className="flex flex-col space-y-1">
-			<a rel="noopener noreferrer" href="#" className="text-sm font-semibold">{title}</a>
+			<a rel="noopener noreferrer" href="#" className="text-sm font-semibold">{username}</a>
 			<span className="text-xs text-gray-400">{moment(createdAt).fromNow()}</span>
 		</div>
 	</div>
 	<div>
 		<img src={image} alt="" className="object-cover w-full mb-4 h-60 sm:h-96" />
+		<h2>{title}</h2>
 		<p className="text-sm text-gray-400">{content}</p>
 	</div>
 	<div className="flex flex-wrap justify-between">

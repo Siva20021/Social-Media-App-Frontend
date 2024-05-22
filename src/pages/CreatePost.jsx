@@ -9,14 +9,14 @@ const CreatePost=()=> {
   const [title,setTitle]=useState('');
   const [description,setDescription]=useState('');
   const [image,setImage]=useState('');
-  const cloud_name='db1bfadc8';
-  const preset_key='cwcpevqu';
+  const preset_key=import.meta.env.VITE_PRESET_KEY;
   const handleFile=(e)=>{
     const file=e.target.files[0];
     const formData=new FormData();
     formData.append('file',file);
     formData.append('upload_preset',preset_key);
-    axios.post(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,formData).then((res)=>{
+    
+    axios.post(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`,formData).then((res)=>{
       setImage(res.data.secure_url);
     }).catch((err)=>{
       toast.error('Failed to upload Image');
@@ -31,11 +31,12 @@ const CreatePost=()=> {
         
         toast.error('Please Fill all the Fields');
       }
-      const response=await axios.post('http://localhost:8800/api/posts',{
+      const response=await axios.post('api/posts',{
         title,
         content:description,
         image,
-        userId:user.id
+        userId:user.id,
+        username:user.username,
       });
       
       if(response.status===201){

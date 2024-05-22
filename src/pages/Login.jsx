@@ -5,16 +5,16 @@ import toast, { Toaster } from 'react-hot-toast';
 const Login= () => {
   const navigate=useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
+    username: '',
     password: ''
 });
   const login = async(e) => {
     
     try {
-      if(formData.email=='' || formData.password==''){
+      if(formData.username=='' || formData.password==''){
         toast.error('Please Fill all the Fields');
       }      
-      const response = await axios.post('http://localhost:8800/api/auth/login', {
+      const response = await axios.post('api/auth/login', {
         ...formData,
       });
       if (response.status === 200) {
@@ -50,11 +50,11 @@ const Login= () => {
               >
                   <div>
                       <label className="font-medium">
-                          Email
+                          Username
                       </label>
                       <input
-                          type="email"
-                          onChange={(e)=>setFormData({ ...formData, email: e.target.value })}
+                          type="name"
+                          onChange={(e)=>setFormData({ ...formData, username: e.target.value })}
                           className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg bg-white"
                       />
                   </div>

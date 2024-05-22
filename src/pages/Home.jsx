@@ -8,18 +8,19 @@ const Home =() => {
   const [posts,setPosts]=useState([]);
   const getPosts=async()=>{
     try{
-      const response = await axios.get('http://localhost:8800/api/posts');
+      const response = await axios.get('api/posts');
       setPosts(response.data);
     }catch(err){
       console.log(err);
     }
   }
+  console.log(posts);
   useEffect(()=>{
     getPosts();
   },[posts]);
   return (
     <div>
-      <section className="px-5 py-10  ">
+      <section className="px-5 py-10 min-h-screen ">
         <div className="container grid grid-cols-12 gap-y-6 md:gap-10 ">
           <div className='col-span-12 space-y-5  md:col-span-3 lg:sticky top-10 self-start flex justify-center items-center '>
             {
@@ -33,12 +34,13 @@ const Home =() => {
                       <h2 className='flex space-x-3'>
                         <GrGallery className='w-6 h-6' />
                         <span className='font-medium'>Posts:</span>
-                        <span className='font-bold ml-3'>{user.posts.length}</span>
+                        <span className='font-bold ml-3'>{user?.posts?.length ? user.posts.length : 0}</span>
                       </h2>
                       <h2 className='flex space-x-3'>
                         <FaUserFriends className='w-6 h-6' />
-                        <span className='font-medium'>friends:</span>
-                        <span className='font-bold ml-3'>{user.friends.length}</span>
+                        <span className='font-medium'>Friends:</span>
+                        <span className='font-bold ml-3'>{user?.friends?.length ? user.friends.length : 0}</span>
+
                       </h2>
                     </div>
                   </div>
@@ -60,7 +62,7 @@ const Home =() => {
           <div className="relative flex col-span-12 bg-center bg-no-repeat bg-cover  xl:col-span-6 lg:col-span-5 md:col-span-9 min-h-96">
             <div className='flex flex-col space-y-10 items-center w-full'>
               {posts?.map((post, index) => {
-                return <Post key={index} title={post.title} content={post.content} image={post.image} userId={post.userId} createdAt={post.createdAt} likes={post.Likes} comments={post.comments} id={post.id}/>
+                return <Post key={index} title={post.title} content={post.content} image={post.image} userId={post.userId} createdAt={post.createdAt} likes={post.Likes} comments={post.comments} id={post.id} username={post.username}/>
               })}
             </div>
 
